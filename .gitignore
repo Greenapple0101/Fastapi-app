@@ -1,16 +1,22 @@
 # Python
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
 *.py[cod]
 *.egg-info/
 .eggs/
 build/
 dist/
 .venv/
+env/
 venv/
 .env
 .env.*
 .pytest_cache/
+.coverage
 .coverage*
+coverage.xml
 htmlcov/
 .mypy_cache/
 .pyre/
@@ -19,6 +25,10 @@ htmlcov/
 .DS_Store
 .AppleDouble
 .LSOverride
+
+# Logs & Database
+*.log
+*.sqlite3
 
 # Editors/IDE
 .vscode/
