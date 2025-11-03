@@ -4,3 +4,4 @@ FastAPI App Version 5.0.0
 - Improved UI for index.html
 - Static files support and banner image hook
 
+
