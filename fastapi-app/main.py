@@ -15,7 +15,9 @@ from typing import Optional
 app = FastAPI()
 
 # Serve static files (images, css, js)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Mount static only when directory exists (CI environments may not have it)
+if os.path.isdir("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Template renderer (prevents manual file read and enables escaping)
 templates = Jinja2Templates(directory="templates")
