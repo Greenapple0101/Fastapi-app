@@ -14,10 +14,20 @@ from starlette.responses import Response
 from .api.routes import router as todo_router
 
 BASE_DIR = Path(__file__).resolve().parent
-# 프로젝트 루트로 이동 (fastapi-app/app -> fastapi-app -> 프로젝트 루트)
+# Docker 컨테이너 내 경로: /app/fastapi-app/app -> /app/fastapi-app -> /app
+# 로컬 개발: fastapi-app/app -> fastapi-app -> 프로젝트 루트
 PROJECT_ROOT = BASE_DIR.parent.parent
 STATIC_DIR = PROJECT_ROOT / "static"
 TEMPLATES_DIR = PROJECT_ROOT / "templates"
+
+# Docker 컨테이너 내에서 실행 시 경로 확인
+# WORKDIR이 /app/fastapi-app이므로 static은 /app/static에 있음
+# 하지만 PROJECT_ROOT는 /app이 되어야 함
+if not STATIC_DIR.exists():
+    # Docker 컨테이너 내 경로 재시도
+    STATIC_DIR = Path("/app/static")
+if not TEMPLATES_DIR.exists():
+    TEMPLATES_DIR = Path("/app/templates")
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
@@ -34,8 +44,17 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 def create_app() -> FastAPI:
     app = FastAPI(title="FastAPI Todos", version="2.0.0")
 
+    # Static 파일 경로 확인 및 마운트
     if STATIC_DIR.exists():
-        app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+        app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+        print(f"✅ Static files mounted from: {STATIC_DIR}")
+    else:
+        print(f"⚠️ Static directory not found at: {STATIC_DIR}")
+        # 절대 경로로 재시도
+        alt_static = Path("/app/static")
+        if alt_static.exists():
+            app.mount("/static", StaticFiles(directory=str(alt_static)), name="static")
+            print(f"✅ Static files mounted from: {alt_static}")
 
     templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
