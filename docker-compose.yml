@@ -1,11 +1,15 @@
+version: "3.7"
+
 services:
   fastapi-app:
     build:
-      context: .                  # 프로젝트 루트에서 빌드
-      dockerfile: Dockerfile      # 루트에 위치한 Dockerfile 사용
+      context: .
+      dockerfile: Dockerfile
     container_name: fastapi-app
     ports:
       - "5001:5001"
+    labels:
+      app: fastapi-app
 
   sonarqube:
     image: sonarqube:latest
@@ -13,7 +17,7 @@ services:
     ports:
       - "9000:9000"
     environment:
-      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true  # 메모리 제한 환경에서 유용한 옵션
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
     volumes:
       - sonarqube_conf:/opt/sonarqube/conf
       - sonarqube_data:/opt/sonarqube/data
@@ -27,8 +31,6 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "7070:9090"
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
 
   grafana:
     image: grafana/grafana:latest
@@ -36,9 +38,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin  # 기본 Grafana 로그인 비밀번호
-    volumes:
-      - grafana-data:/var/lib/grafana
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - prometheus
       - loki
@@ -49,14 +49,11 @@ services:
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
-    volumes:
-      - loki-data:/loki
 
   promtail:
     image: grafana/promtail:latest
     container_name: promtail
     volumes:
-      - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./promtail-config.yml:/etc/promtail/config.yml
     command: -config.file=/etc/promtail/config.yml
@@ -68,10 +65,6 @@ services:
     container_name: node-exporter
     ports:
       - "7100:9100"
-    command:
-      - '--path.rootfs=/host'
-    volumes:
-      - /:/host:ro
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
