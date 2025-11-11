@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 애플리케이션 파일 복사
 COPY fastapi-app ./fastapi-app
 COPY templates ./templates
+COPY static ./static
 COPY tests ./tests
 
 # FastAPI 애플리케이션 코드가 위치한 디렉터리로 이동
