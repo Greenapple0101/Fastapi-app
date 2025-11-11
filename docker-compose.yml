@@ -57,8 +57,6 @@ services:
     networks:
       - monitoring
 
-  # Promtail은 선택 사항입니다. 필요 없으면 주석 처리하세요.
-  # Docker 로그는 Promtail 없이도 수집 가능합니다.
   promtail:
     image: grafana/promtail:latest
     container_name: promtail
@@ -71,8 +69,6 @@ services:
       - loki
     networks:
       - monitoring
-    profiles:
-      - with-promtail  # 선택적 사용: docker compose --profile with-promtail up
 
   node-exporter:
     image: prom/node-exporter:latest
