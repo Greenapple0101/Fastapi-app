@@ -191,11 +191,10 @@
         }
 
         async function toggleComplete(todo, completed) {
-            const updated = { ...todo, completed };
             const response = await fetch(`/todos/${todo.id}`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updated)
+                body: JSON.stringify({ completed })
             });
             if (response.ok) {
                 fetchTodos();
@@ -223,7 +222,7 @@
                 },
                 body: JSON.stringify({ title, description })
             });
-            if (response.ok) {
+            if (response.status === 201) {
                 titleInput.value = '';
                 descriptionInput.value = '';
                 fetchTodos();
