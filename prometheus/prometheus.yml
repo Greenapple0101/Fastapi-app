@@ -1,11 +1,12 @@
 global:
   scrape_interval: 15s
+  evaluation_interval: 15s
 
 scrape_configs:
   # FastApi 애플리케이션의 메트릭 수집
   - job_name: 'fastapi'
     static_configs:
-      - targets: ['fastapi-app:5001']  # Docker for Mac/Windows인 경우; 리눅스에서는 'localhost:5000' 또는 컨테이너 네트워크 이름 사용
+      - targets: ['fastapi-app:5001']
 
   # 시스템 메트릭 수집 (node-exporter)
   - job_name: 'node'
@@ -16,3 +17,8 @@ scrape_configs:
   - job_name: 'cadvisor'
     static_configs:
       - targets: ['cadvisor:8080']
+
+  # Prometheus 자체 메트릭
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
