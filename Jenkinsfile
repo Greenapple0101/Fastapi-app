@@ -45,12 +45,32 @@ pipeline {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} << 'EOF'
                         
-                        # 기존 컨테이너 삭제 (있으면)
-                        docker rm -f ${CONTAINER_NAME} || true
+                        # 프로젝트 디렉토리로 이동
+                        cd ${REMOTE_PATH}/FastApi_Todos || mkdir -p ${REMOTE_PATH}/FastApi_Todos && cd ${REMOTE_PATH}/FastApi_Todos
+                        
+                        # Git에서 최신 코드 가져오기
+                        if [ -d .git ]; then
+                            git pull origin main
+                        else
+                            git clone https://github.com/Greenapple0101/FastApi_Todos.git .
+                        fi
+                        
+                        # docker-compose.override.yml 생성 (빌드 대신 이미지 사용)
+                        cat > docker-compose.override.yml << 'EOFILE'
+services:
+  fastapi-app:
+    image: yorange50/fastapi-app:latest
+EOFILE
+                        
+                        # 기존 컨테이너 중지 및 제거
+                        docker-compose down || true
+                        
                         # 최신 이미지 pull
                         docker pull ${IMAGE_NAME}:latest
-                        # 새 컨테이너 실행
-                        docker run -d --name ${CONTAINER_NAME} -p ${EXTERNAL_PORT}:${INTERNAL_PORT} ${IMAGE_NAME}:latest
+                        
+                        # docker-compose로 전체 스택 실행 (Grafana, Prometheus, Loki 포함)
+                        docker-compose up -d
+                        
                         exit
                         EOF
                         """
