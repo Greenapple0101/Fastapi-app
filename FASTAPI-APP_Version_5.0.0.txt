@@ -1,7 +1,0 @@
-FastAPI App Version 5.0.0
-- SonarQube integration
-- docker-compose with sonarqube service
-- Improved UI for index.html
-- Static files support and banner image hook
-
-
