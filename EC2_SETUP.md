@@ -25,7 +25,7 @@ docker run -d \
   --name promtail \
   --network monitor-net \
   -v /var/lib/docker/containers:/var/lib/docker/containers:ro \
-  -v ~/FastApi_Todos/promtail-config.yml:/etc/promtail/config.yml \
+  -v ~/FastApi_Todos/monitoring/promtail-config.yml:/etc/promtail/config.yml \
   grafana/promtail:2.9.1 \
   -config.file=/etc/promtail/config.yml
 ```
