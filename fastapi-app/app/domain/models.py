@@ -12,6 +12,7 @@ class Todo:
     title: str
     description: str
     completed: bool = False
+    date: str | None = None  # 날짜 필드 추가 (YYYY-MM-DD 형식)
     created_at: datetime = field(default_factory=datetime.utcnow)
     updated_at: datetime = field(default_factory=datetime.utcnow)
 
@@ -47,6 +48,7 @@ class Todo:
             "title": self.title,
             "description": self.description,
             "completed": self.completed,
+            "date": self.date,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }
@@ -58,6 +60,7 @@ class Todo:
             title=str(payload["title"]),
             description=str(payload["description"]),
             completed=bool(payload.get("completed", False)),
+            date=payload.get("date"),
             created_at=datetime.fromisoformat(payload.get("created_at"))
             if payload.get("created_at")
             else datetime.utcnow(),

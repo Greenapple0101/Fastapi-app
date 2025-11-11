@@ -14,8 +14,10 @@ from starlette.responses import Response
 from .api.routes import router as todo_router
 
 BASE_DIR = Path(__file__).resolve().parent
-STATIC_DIR = BASE_DIR.parent / "static"
-TEMPLATES_DIR = BASE_DIR.parent.parent / "templates"
+# 프로젝트 루트로 이동 (fastapi-app/app -> fastapi-app -> 프로젝트 루트)
+PROJECT_ROOT = BASE_DIR.parent.parent
+STATIC_DIR = PROJECT_ROOT / "static"
+TEMPLATES_DIR = PROJECT_ROOT / "templates"
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
@@ -24,7 +26,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("X-Frame-Options", "DENY")
         response.headers.setdefault("Referrer-Policy", "no-referrer")
-        csp = "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'"
+        csp = "default-src 'self'; img-src 'self' data: http: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'"
         response.headers.setdefault("Content-Security-Policy", csp)
         return response
 

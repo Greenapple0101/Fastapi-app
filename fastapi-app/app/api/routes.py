@@ -29,7 +29,7 @@ def create_todo(
     payload: TodoCreate, service: TodoService = Depends(get_todo_service)
 ) -> TodoRead:
     try:
-        todo = service.create_todo(payload.title, payload.description)
+        todo = service.create_todo(payload.title, payload.description, payload.date)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
     return TodoRead.from_domain(todo)
@@ -46,6 +46,7 @@ def replace_todo(
             todo_id,
             title=payload.title,
             description=payload.description,
+            date=payload.date if hasattr(payload, 'date') else None,
         )
     except LookupError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Todo not found")
@@ -71,6 +72,7 @@ def update_todo(
             title=payload.title,
             description=payload.description,
             completed=payload.completed,
+            date=payload.date,
         )
     except LookupError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Todo not found")

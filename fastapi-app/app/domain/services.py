@@ -24,14 +24,12 @@ class TodoService:
     def get_todo(self, todo_id: int) -> Optional[Todo]:
         return self._repository.get(todo_id)
 
-    def create_todo(self, title: str, description: str) -> Todo:
+    def create_todo(self, title: str, description: str = "", date: str | None = None) -> Todo:
         title = title.strip()
-        description = description.strip()
+        description = description.strip() if description else ""
         if not title:
             raise ValueError("Title must not be empty")
-        if not description:
-            raise ValueError("Description must not be empty")
-        todo = Todo(id=self._id_provider(), title=title, description=description)
+        todo = Todo(id=self._id_provider(), title=title, description=description, date=date)
         return self._repository.add(todo)
 
     def update_todo(
@@ -41,6 +39,7 @@ class TodoService:
         title: str | None = None,
         description: str | None = None,
         completed: bool | None = None,
+        date: str | None = None,
     ) -> Todo:
         todo = self._require(todo_id)
         if title is not None or description is not None:
@@ -50,6 +49,9 @@ class TodoService:
             )
         if completed is not None:
             todo.apply_completion(completed)
+        if date is not None:
+            todo.date = date
+            todo.touch()
         return self._repository.update(todo)
 
     def delete_todo(self, todo_id: int) -> None:
