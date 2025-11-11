@@ -30,7 +30,7 @@ docker compose up -d --build
 | Prometheus | `http://<host>:7070/` | Check `Status → Targets` to ensure all jobs are `UP` |
 | Grafana | `http://<host>:3000/` | Default credentials `admin / admin` |
 | SonarQube | `http://<host>:9000/` | First login `admin / admin`, change password on first use |
-| cAdvisor | `http://<host>:8080/` | Live container metrics |
+| cAdvisor | `http://<host>:8081/` | Live container metrics |
 
 ## Grafana Dashboards
 1. Log in to Grafana → `Dashboards → Import`.
