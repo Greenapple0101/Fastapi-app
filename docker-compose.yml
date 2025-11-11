@@ -11,19 +11,6 @@ services:
     labels:
       app: fastapi-app
 
-  sonarqube:
-    image: sonarqube:latest
-    container_name: sonarqube
-    ports:
-      - "9000:9000"
-    environment:
-      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
-    volumes:
-      - sonarqube_conf:/opt/sonarqube/conf
-      - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_logs:/opt/sonarqube/logs
-      - sonarqube_extensions:/opt/sonarqube/extensions
-
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -43,6 +30,9 @@ services:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
       - loki
@@ -95,10 +85,6 @@ services:
       - monitoring
 
 volumes:
-  sonarqube_conf:
-  sonarqube_data:
-  sonarqube_logs:
-  sonarqube_extensions:
   grafana-data:
   loki-data:
 
