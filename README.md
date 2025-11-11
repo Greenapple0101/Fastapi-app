@@ -1,4 +1,5 @@
 # FastAPI Todos
+<img width="834" height="943" alt="image" src="https://github.com/user-attachments/assets/d141e281-2f0e-46a0-8b12-f7bb35b0778f" />
 
 FastAPI 기반의 투두 애플리케이션입니다. 도메인 주도 설계(DDD) 스타일로 백엔드를 재구성하고, Prometheus + Grafana + cAdvisor + Node Exporter + SonarQube 까지 포함한 운영 스택을 한 번에 배포할 수 있도록 정리했습니다.
 
